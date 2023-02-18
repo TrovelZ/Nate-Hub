@@ -614,7 +614,7 @@ if GameID == SoulEaterResonance then
 		getgenv().ADelivery = State 
 		while getgenv().ADelivery do 
 			local FindQuest = findQuest()
-			task.wait(0.01)
+			task.wait(1)
 			if FindQuest then 
 				repeat 
 					Player.Character.HumanoidRootPart.CFrame = FindQuest.CFrame
