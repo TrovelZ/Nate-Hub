@@ -575,13 +575,13 @@ if GameID == Pilgrammed then
 	local NPC = Workspace.NPCs
 	local TaintedFlowerRemote = NPC.Kyle.Script.RemoteEvent
 	--Function--
-
+	
 	--UI Creation--
 	local Main = Window:NewTab("Main")
 	local MainSection = Main:NewSection(TopSectionText)
 
 	local GetTaintedFlower = MainSection:NewButton("Get Tainted Flower", "Give you tainted flower", function()
-		TaintedFLowerRemote:FireServer()
+		TaintedFlowerRemote:FireServer()
 	end)
 end
 
