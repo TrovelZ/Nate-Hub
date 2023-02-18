@@ -8,6 +8,7 @@ local DifficultyMachine = 11915606459
 local BackalleySimulator = 11257760806
 local UCA = 6143963763 
 local Pilgrammed = 6735572261
+local SoulEaterResonance = 4505214429
 
 --Normal Variable--
 local UIToggleDB = true
@@ -584,6 +585,72 @@ if GameID == Pilgrammed then
 	end)
 end
 
+if GameID == SoulEaterResonance then 
+	--Variable--
+	local Misc = Workspace.miscObjects
+	local HeroDelivery = Misc.heroDelivery
+	local QuestNPC = Workspace.radiantNpcs
+	local QuestRemote = ReplicatedStorage.remotes.remoteEvent
+	getgenv().ADelivery = false 
+	--Function--
+	local function findQuest()
+		for i,v in pairs(QuestNPC:GetChildren()) do 
+			if v.Name == "heroDelivery" then 
+				return v.HumanoidRootPart
+			end
+		end
+	end
+	local function findOfficerCindy()
+		for i,v in pairs(HeroDelivery:GetChildren()) do 
+			if v:FindFirstChild("officerCindy") then 
+				if v.officerCindy.owner.Value == Player.Name then 
+					return v.officerCindy.HumanoidRootPart
+				end
+			end
+		end
+	end
+
+	local function AutoDelivery(State)
+		getgenv().ADelivery = State 
+		while getgenv().ADelivery do 
+			local FindQuest = findQuest()
+			task.wait(0.01)
+			if FindQuest then 
+				repeat 
+					Player.Character.HumanoidRootPart.CFrame = FindQuest.CFrame
+					local questStart = "heroDelivery"
+					local questStartT = {
+						[1] = FindQuest.Parent 
+					}
+					task.wait(0.5)
+					QuestRemote:FireServer(questStart, questStartT)
+				until Player.PlayerGui.ScreenGui.questMsg.Visible == true 
+			end 
+			task.wait(0.1)
+			local FindCindy = findOfficerCindy()
+			if FindCindy then 
+				Player.Character.HumanoidRootPart.CFrame = FindCindy.CFrame
+    			local questEnd = "heroDeliveryTurnIn"
+    			local questEndT = {
+    				[1] = FindCindy.Parent
+    			}
+				task.wait(0.5)
+    			QuestRemote:FireServer(questEnd, questEndT)
+			end
+		end
+	end
+	--UI Creation--
+	local Main = Window:NewTab("Main")
+	local MainSection = Main:NewSection(TopSectionText)
+
+	local AutoFarm = MainSection:NewToggle("Autofarm", "Free exp lol", function(state)
+		if state then 
+			AutoDelivery(state)
+		else
+			AutoDelivery(state)
+		end
+	end)
+end
 --UI Toggling Keybind--
 local Other = Window:NewTab("Other")
 local OtherSection = Other:NewSection(TopSectionText)
