@@ -661,19 +661,26 @@ if GameID == FairyTailMagicEra then
 	--Function--
 	local function AutoFarmTrinket(state)
 		getgenv().AutoTrinket = state 
+		local ObjectFrame = nil
 		Player.Character.HumanoidRootPart.Anchored = false
 		while getgenv().AutoTrinket do 
 			task.wait()
 			for i,v in pairs(TrinketsFolder:GetChildren()) do 
 				if not getgenv().AutoTrinket then return end 
-				if v == nil then return end 
+				if v == nil then
+					Player.Character.HumanoidRootPart.Anchored = false 
+					return 
+				end 
 				if v.ClassName == "MeshPart" or v.ClassName == "UnionOperation" then 
+					Player.Character.HumanoidRootPart.Anchored = false
+					ObjectFrame = v.CFrame 
 					Player.Character.HumanoidRootPart.CFrame = v.CFrame 
 					task.wait(0.2)
 					game:GetService("ReplicatedStorage").Remotes.TrinketPickup:FireServer(v.Name)
 					task.wait(0.1)
 				end
-				Player.Character.HumanoidRootPart.CFrame = SafeSpot
+				Player.Character.HumanoidRootPart.CFrame = ObjectFrame * CFrame.new(0,-20,0)
+				Player.Character.HumanoidRootPart.Anchored = true
 			end
 		end
 	end
