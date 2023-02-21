@@ -9,6 +9,7 @@ local BackalleySimulator = 11257760806
 local UCA = 6143963763 
 local Pilgrammed = 6735572261
 local SoulEaterResonance = 4505214429
+local FairyTailMagicEra = 11773820638
 
 --Normal Variable--
 local UIToggleDB = true
@@ -614,7 +615,7 @@ if GameID == SoulEaterResonance then
 		getgenv().ADelivery = State 
 		while getgenv().ADelivery do 
 			local FindQuest = findQuest()
-			task.wait(10)
+			task.wait(0.01)
 			if FindQuest then 
 				repeat 
 					Player.Character.HumanoidRootPart.CFrame = FindQuest.CFrame
@@ -651,6 +652,42 @@ if GameID == SoulEaterResonance then
 		end
 	end)
 end
+
+if GameID == FairyTailMagicEra then 
+	--Variable--
+	local TrinketsFolder = Workspace.Trinkets 
+	getgenv().AutoTrinket = false 
+	--Function--
+	local function AutoFarmTrinket(state)
+		getgenv().AutoTrinket = state 
+		Player.Character.HumanoidRootPart.Anchored = false
+		while getgenv().AutoTrinket do 
+			task.wait()
+			for i,v in pairs(TrinketsFolder:GetChildren()) do 
+				if not getgenv().AutoTrinket then return end 
+				if v == nil then return end 
+				if v.ClassName == "MeshPart" then 
+					Player.Character.HumanoidRootPart.CFrame = v.CFrame 
+					task.wait(0.2)
+					game:GetService("ReplicatedStorage").Remotes.TrinketPickup:FireServer(v.Name)
+					task.wait(0.1)
+				end
+			end
+		end
+	end
+	--UI Creation--
+	local Main = Window:NewTab("Main")
+	local MainSection = Main:NewSection(TopSectionText)
+
+	local TrinketAutoFarm = MainSection:NewToggle("Autofarm Trinkets", "Free trinkets lol", function(state)
+		if state then 
+			AutoFarmTrinket(state)
+		else
+			AutoFarmTrinket(state)
+		end
+	end)
+end
+
 --UI Toggling Keybind--
 local Other = Window:NewTab("Other")
 local OtherSection = Other:NewSection(TopSectionText)
