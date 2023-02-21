@@ -658,15 +658,22 @@ if GameID == FairyTailMagicEra then
 	local TrinketsFolder = Workspace.Trinkets 
 	local SafeSpot = CFrame.new(-112, 211, -186)
 	getgenv().AutoTrinket = false 
+	getgenv().GCFrame = CFrame.new(0,0,0) 
+	getgenv().Floating = false 
 	--Function--
-	local function AutoFarmTrinket(state)
-		getgenv().AutoTrinket = state 
-		for i,v in pairs (Player.Character:GetDescendants()) do 
-			if v.ClassName == "Part" then 
-				v.CanCollide = true
+	local newThread = coroutine.create(function()
+		while true do 
+			task.wait()
+			Player.Character.HumanoidRootPart.CFrame = getgenv().GCFrame * CFrame.new(0,-50,0)
+			if not getgenv().Floating then 
+				coroutine.yield()
 			end
 		end
-		local ObjectFrame = nil
+	end)
+	local function AutoFarmTrinket(state)
+		getgenv().AutoTrinket = state 
+		getgenv().Floating = false 
+		local ObjectFrame = CFrame.new(0,0,0)
 		while getgenv().AutoTrinket do 
 			task.wait()
 			for i,v in pairs(TrinketsFolder:GetChildren()) do 
@@ -675,19 +682,17 @@ if GameID == FairyTailMagicEra then
 					return 
 				end 
 				if v.ClassName == "MeshPart" or v.ClassName == "UnionOperation" then 
-					ObjectFrame = v.CFrame 
+					getgenv().Floating = false 
+					getgenv().GCFrame = v.CFrame
+					task.wait(0.2)
 					Player.Character.HumanoidRootPart.CFrame = v.CFrame 
 					task.wait(0.2)
 					game:GetService("ReplicatedStorage").Remotes.TrinketPickup:FireServer(v.Name)
 					task.wait(0.1)
 				end
+				getgenv().Floating = true
+				coroutine.resume(newThread)
 			end
-			for i,v in pairs (Player.Character:GetDescendants()) do 
-				if v.ClassName == "Part" then 
-					v.CanCollide = false
-				end
-			end
-			Player.Character.HumanoidRootPart.CFrame = ObjectFrame * CFrame.new(0,-20,0)
 		end
 	end
 	--UI Creation--
