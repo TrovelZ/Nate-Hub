@@ -656,6 +656,7 @@ end
 if GameID == FairyTailMagicEra then 
 	--Variable--
 	local TrinketsFolder = Workspace.Trinkets 
+	local SafeSpot = CFrame.new(-112, 211, -186)
 	getgenv().AutoTrinket = false 
 	--Function--
 	local function AutoFarmTrinket(state)
@@ -666,12 +667,13 @@ if GameID == FairyTailMagicEra then
 			for i,v in pairs(TrinketsFolder:GetChildren()) do 
 				if not getgenv().AutoTrinket then return end 
 				if v == nil then return end 
-				if v.ClassName == "MeshPart" then 
+				if v.ClassName == "MeshPart" or v.ClassName == "UnionOperation" then 
 					Player.Character.HumanoidRootPart.CFrame = v.CFrame 
 					task.wait(0.2)
 					game:GetService("ReplicatedStorage").Remotes.TrinketPickup:FireServer(v.Name)
 					task.wait(0.1)
 				end
+				Player.Character.HumanoidRootPart.CFrame = SafeSpot
 			end
 		end
 	end
