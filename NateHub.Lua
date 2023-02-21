@@ -664,7 +664,7 @@ if GameID == FairyTailMagicEra then
 	local newThread = coroutine.create(function()
 		while true do 
 			task.wait()
-			Player.Character.HumanoidRootPart.CFrame = getgenv().GCFrame * CFrame.new(0,-50,0)
+			Player.Character.HumanoidRootPart.CFrame = getgenv().GCFrame * CFrame.new(0,-20,0)
 			if not getgenv().Floating then 
 				coroutine.yield()
 			end
